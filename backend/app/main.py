@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from backend.app.client import supabase
+
 
 app = FastAPI(title="Gym CRUD & Biometric Access System", version="1.0.0")
 
