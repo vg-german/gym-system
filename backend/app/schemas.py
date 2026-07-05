@@ -1,6 +1,9 @@
 from pydantic import BaseModel
 from datetime import datetime
+from uuid import UUID
 from typing import Optional, List
+from datetime import datetime, date
+
 
 # Membership Schemas
 
@@ -62,9 +65,45 @@ class MemberUpdate(BaseModel):
 
 
 class MemberResponse(MemberBase):
-    id: str
+    id: UUID
     status: str
     face_embedding: Optional[List[float]] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# Access Verification Schema
+class FaceVerificationRequest(BaseModel):
+    face_embedding: List[float]
+
+# Attendance Schemas
+
+
+class AttendanceLogBase(BaseModel):
+    member_id: UUID
+    access_status: str
+
+
+class AttendanceLogResponse(AttendanceLogBase):
+    id: int
+    checked_in: datetime
+
+    class Config:
+        from_attributes = True
+
+
+# Suscription Schemas
+class SubscriptionBase(BaseModel):
+    member_id: UUID
+    membership_id: int
+    start_date: date
+    end_date: date
+
+
+class SubscriptionResponse(SubscriptionBase):
+    id: UUID
     created_at: datetime
 
     class Config:
