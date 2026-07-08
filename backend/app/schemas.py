@@ -68,7 +68,8 @@ class MemberResponse(MemberBase):
     id: UUID
     status: str
     face_embedding: Optional[List[float]] = None
-    created_at: datetime
+    join_date: datetime
+    last_visit_date: Optional[datetime] = None
 
     class Config:
         from_attributes = True
@@ -98,13 +99,17 @@ class AttendanceLogResponse(AttendanceLogBase):
 class SubscriptionBase(BaseModel):
     member_id: UUID
     membership_id: int
-    start_date: date
-    end_date: date
+
+
+class SubscriptionCreate(SubscriptionBase):
+    pass
 
 
 class SubscriptionResponse(SubscriptionBase):
     id: UUID
     created_at: datetime
+    start_date: date
+    end_date: date
 
     class Config:
         from_attributes = True

@@ -159,10 +159,12 @@ def verify_access(request: FaceVerificationRequest):
                     "distance": round(min_distance, 4)
                 }
         else:
-            raise HTTPException(
-                status_code=404,
-                detail="Face not recognized. Access Denied."
-            )
+            return {
+                "access": "Unknown",
+                "message": "Face not recognized. Please try again or visit reception.",
+                "member_id": None,
+                "distance": round(min_distance, 4) if min_distance != float("inf") else 1.0
+            }
 
     except HTTPException:
         raise
