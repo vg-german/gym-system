@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
-from backend.app.client import supabase, verify_admin
-from backend.app.schemas import MemberCreate, MemberResponse, MemberFaceRegister, MemberUpdate, FaceVerificationRequest
+from app.client import supabase, verify_admin
+from app.schemas import MemberCreate, MemberResponse, MemberFaceRegister, MemberUpdate, FaceVerificationRequest
 import math
 from datetime import datetime
 from uuid import UUID
 
 
-router = APIRouter(prefix="/members", tags=["Members Management"])
+router = APIRouter(prefix="/members", tags=["Members"])
 
 # Calculate the euclidean distance between two face embeddings
 

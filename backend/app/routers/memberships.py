@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
-from backend.app.schemas import MembershipCreate, MembershipResponse, MembershipUpdate
-from backend.app.client import verify_admin, supabase
+from app.schemas import MembershipCreate, MembershipResponse, MembershipUpdate
+from app.client import verify_admin, supabase
 
 
 router = APIRouter(prefix="/memberships", tags=["Memberships"])

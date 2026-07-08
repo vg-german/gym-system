@@ -3,10 +3,10 @@ from uuid import UUID
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from dateutil.relativedelta import relativedelta
-from backend.app.schemas import SubscriptionCreate
-from backend.app.client import supabase, verify_admin
+from app.schemas import SubscriptionCreate
+from app.client import supabase, verify_admin
 
-router = APIRouter(prefix="/subscriptions", tags=["subscriptions"])
+router = APIRouter(prefix="/subscriptions", tags=["Subscriptions"])
 
 
 @router.post("/purchase", status_code=status.HTTP_201_CREATED)

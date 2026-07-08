@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.app.routers import memberships, members, suscriptions
+from app.routers import memberships, members, suscriptions
 
 app = FastAPI(title="Gym CRUD & Biometric Access System", version="1.0.0")
 
