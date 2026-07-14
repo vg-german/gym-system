@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import memberships, members, suscriptions
+from app.routers import memberships, members, suscriptions, dashboard
 
 app = FastAPI(title="Gym CRUD & Biometric Access System", version="1.0.0")
 
@@ -16,6 +16,7 @@ app.add_middleware(
 app.include_router(memberships.router)
 app.include_router(members.router)
 app.include_router(suscriptions.router)
+app.include_router(dashboard.router)
 
 
 @app.get("/")

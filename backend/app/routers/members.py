@@ -3,7 +3,8 @@ from typing import List
 from app.client import supabase, verify_admin
 from app.schemas import MemberCreate, MemberResponse, MemberFaceRegister, MemberUpdate, FaceVerificationRequest
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 from uuid import UUID
 
 
@@ -110,6 +111,7 @@ def delete_member(member_id: UUID, admin=Depends(verify_admin)):
 # 6. VERIFY ACCESS (Face Recognition)
 @router.post("/verify-access", status_code=status.HTTP_200_OK)
 def verify_access(request: FaceVerificationRequest):
+
     try:
         response = supabase.table("members").select("id", "first_name", "last_name",
                                                     "status", "face_embedding").not_.is_("face_embedding", "null").execute()
@@ -134,7 +136,9 @@ def verify_access(request: FaceVerificationRequest):
                     best_match = member
 
         if best_match:
+
             if best_match["status"] == "Active":
+
                 supabase.table("attendances").insert({
                     "member_id": best_match["id"],
                     "access_status": "Granted"

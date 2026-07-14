@@ -113,3 +113,21 @@ class SubscriptionResponse(SubscriptionBase):
 
     class Config:
         from_attributes = True
+
+
+# Dashboard Schemas
+class DashboardStats(BaseModel):
+    total_members: int
+    active_subscribers: int
+    today_checkins: int
+
+
+class AccessLogResponse(BaseModel):
+    id: int
+    name: str
+    email: str
+    time:  str
+    status: str
+
+    class Config:
+        from_attributes = True
