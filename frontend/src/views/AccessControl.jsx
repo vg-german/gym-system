@@ -7,16 +7,15 @@ const AccessControl = () => {
   const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('Look to the camera to enter');
   
-  // Guardamos el estado en una referencia para que el setInterval lea SIEMPRE el valor real actualizado
+ 
   const statusRef = useRef('loading');
   const isProcessing = useRef(false);
 
-  // Sincronizar la referencia cada vez que cambie el estado de React
+
   useEffect(() => {
     statusRef.current = status;
   }, [status]);
 
-  // 1. EFECTO PARA CARGAR MODELOS Y CAMBIAR A 'READY'
   useEffect(() => {
     const loadModelsAndStartVideo = async () => {
       try {
@@ -50,14 +49,13 @@ const AccessControl = () => {
     };
   }, []);
 
-  // 2. EFECTO PARA EL INTERVALO (Escucha cuando cambia el estado de inicialización)
+
   useEffect(() => {
-    // Si la IA aún está cargando o dio error, no hacemos nada y esperamos
+    
     if (status === 'loading' || status === 'error') return;
 
-    // Cuando el estado pasa a 'ready' (o cualquier otro), este intervalo se crea UNA SOLA VEZ
+    
     const interval = setInterval(async () => {
-      // Usamos las referencias (.current) para evaluar las condiciones en tiempo real sin congelarse
       if (
         isProcessing.current || 
         statusRef.current !== 'ready' || 
@@ -75,7 +73,6 @@ const AccessControl = () => {
           .withFaceDescriptor();
 
         if (detection) {
-          // Bloqueo inmediato síncrono
           isProcessing.current = true;
           setStatus('loading'); 
           setMessage('Verifying identity...');
@@ -102,7 +99,6 @@ const AccessControl = () => {
             setMessage('Error connecting to server');
           }
 
-          // Espera de 5 segundos antes de volver a activar la cámara
           setTimeout(() => {
             setStatus('ready');
             setMessage('Look to the camera to enter');
@@ -117,7 +113,6 @@ const AccessControl = () => {
     }, 250); 
 
     return () => clearInterval(interval);
-    // CAMBIO AQUÍ: Escucha si el sistema ya está listo para encender el motor de escaneo
   }, [status === 'ready']); 
 
   const getBackgroundClass = () => {

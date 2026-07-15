@@ -105,17 +105,31 @@ class SubscriptionCreate(SubscriptionBase):
     pass
 
 
-class SubscriptionResponse(SubscriptionBase):
+class SubscriptionItemResponse(BaseModel):
     id: UUID
-    created_at: datetime
+    member_name: str
+    email: str
+    plan_name: str
     start_date: date
     end_date: date
+    status: str
 
     class Config:
         from_attributes = True
 
 
+class PaginatedSubscriptionResponse(BaseModel):
+    items: list[SubscriptionItemResponse]
+    total_pages: int
+    current_page: int
+    total_items: int
+
+    class Config:
+        from_attributes = True
+
 # Dashboard Schemas
+
+
 class DashboardStats(BaseModel):
     total_members: int
     active_subscribers: int
