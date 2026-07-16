@@ -1,5 +1,6 @@
 // DashboardView 
 import React, { useEffect, useState } from 'react';
+import api from '../../services/axios';
 
 const DashboardView = () => {
   const [stats, setStats] = useState({
@@ -14,32 +15,21 @@ const DashboardView = () => {
   const [page, setPage] = useState(1);
   const pageSize = 5; 
 
-
   const fetchDashboardData = async (currentPage, isPolling = false) => {
-    const token = localStorage.getItem('admin_token');
-    
-
     if (!isPolling) {
       setLoading(true);
       setAccessLogs([]); 
     }
     
     try {
+
       const [statsResponse, logsResponse] = await Promise.all([
-        fetch('http://localhost:8000/dashboard/stats', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        }),
-        fetch(`http://localhost:8000/dashboard/access-logs?page=${currentPage}&size=${pageSize}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        })
+        api.get('/dashboard/stats'),
+        api.get(`/dashboard/access-logs?page=${currentPage}&size=${pageSize}`)
       ]);
 
-      if (!statsResponse.ok || !logsResponse.ok) {
-        throw new Error('Failed to synchronize data from the secure server');
-      }
-
-      const statsData = await statsResponse.json();
-      const logsData = await logsResponse.json();
+      const statsData = statsResponse.data;
+      const logsData = logsResponse.data;
 
       setStats({
         total_members: statsData.total_members,
@@ -51,7 +41,8 @@ const DashboardView = () => {
       setError(null);
     } catch (err) {
       console.error("API Connection Error:", err);
-      setError("Connection lost with backend. Retrying...");
+      const errorMsg = err.response?.data?.detail || "Connection lost with backend. Retrying...";
+      setError(errorMsg);
     } finally {
       if (!isPolling) {
         setLoading(false);
@@ -60,13 +51,11 @@ const DashboardView = () => {
   };
 
   useEffect(() => {
-  
     fetchDashboardData(page, false);
 
     let interval = null;
     if (page === 1) {
       interval = setInterval(() => {
-        
         fetchDashboardData(1, true);
       }, 4000);
     }
@@ -146,7 +135,7 @@ const DashboardView = () => {
               ) : (
                 accessLogs.map((log) => (
                   <tr key={log.id} className="hover:bg-zinc-800/30 transition-colors">
-                    <td className="py-4 font-semibold text-white">{(log.name)}</td>
+                    <td className="py-4 font-semibold text-white">{log.name}</td>
                     <td className="py-4 text-zinc-400">{log.email}</td>
                     <td className="py-4 text-zinc-400">{log.time}</td>
                     <td className="py-4 text-right">

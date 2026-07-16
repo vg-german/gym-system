@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
-from app.schemas import MembershipCreate, MembershipResponse, MembershipUpdate
+from app.schemas import MembershipCreate, MembershipResponse, MembershipUpdate, MembershipStatusUpdate
 from app.client import verify_admin, supabase
 
 
@@ -83,3 +83,12 @@ def delete_membership(membership_id: int, admin=Depends(verify_admin)):
     except Exception as e:
         raise HTTPException(
             status_code=400, detail="Cannot delete membership plan. It may be linked to active suscriptions.")
+
+
+# Pause a membership by ID
+
+@router.patch("/{membership_id}/status")
+def toggle_membership_status(membership_id: int, payload: MembershipStatusUpdate, admin=Depends(verify_admin)):
+    response = supabase.table("memberships").update(
+        {"status": payload.status.capitalize()}).eq("id", membership_id).execute()
+    return response.data[0]

@@ -1,4 +1,6 @@
+// SubscriptionsView 
 import React, { useState, useEffect, useCallback } from 'react';
+import api from '../../services/axios'; 
 
 const SubscriptionsView = () => {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -13,35 +15,25 @@ const SubscriptionsView = () => {
   const fetchSubscriptions = useCallback(async () => {
     setLoading(true);
     try {
-      const baseUrl = 'http://localhost:8000/subscriptions'; 
       
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-      });
+      const queryParams = {
+        page: page,
+        limit: limit,
+      };
       
-      if (search.trim()) params.append('search', search.trim());
-      if (status !== 'ALL') params.append('status', status.toLowerCase());
+      if (search.trim()) queryParams.search = search.trim();
+      if (status !== 'ALL') queryParams.status = status.toLowerCase();
 
-      const token = localStorage.getItem('admin_token'); 
-
-      const response = await fetch(`${baseUrl}?${params.toString()}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/center',
-          'Authorization': `Bearer ${token}` 
-        }
+      const response = await api.get('/subscriptions', {
+        params: queryParams
       });
 
-      if (!response.ok) {
-        throw new Error('Error al obtener las suscripciones');
-      }
-
-      const data = await response.json();
-      setSubscriptions(data.items);
-      setTotalPages(data.total_pages);
+      const { items, total_pages } = response.data;
+      
+      setSubscriptions(items);
+      setTotalPages(total_pages);
     } catch (error) {
-      console.error('Error fetching subscriptions:', error);
+      console.error('Error fetching subscriptions:', error?.response?.data?.detail || error.message);
     } finally {
       setLoading(false);
     }
@@ -111,7 +103,6 @@ const SubscriptionsView = () => {
           </thead>
           <tbody className="divide-y divide-white/5 text-sm text-zinc-300">
             {loading ? (
-              
               <tr>
                 <td colSpan="6" className="py-8 text-center text-zinc-500 animate-pulse font-medium">
                   Loading subscriptions database...
@@ -124,7 +115,6 @@ const SubscriptionsView = () => {
                 </td>
               </tr>
             ) : (
-              
               subscriptions.map((sub) => (
                 <tr key={sub.id} className="hover:bg-zinc-800/30 transition-colors">
                   <td className="py-4 font-semibold text-white">{sub.member_name}</td>

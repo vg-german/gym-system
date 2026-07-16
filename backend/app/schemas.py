@@ -10,6 +10,7 @@ from datetime import datetime, date
 
 class MembershipBase(BaseModel):
     name: str
+    description: Optional[str] = None
     contract_period: int
     price: float
 
@@ -18,15 +19,20 @@ class MembershipCreate(MembershipBase):
     pass
 
 
+class MembershipStatusUpdate(BaseModel):
+    status: str
+
+
 class MembershipUpdate(BaseModel):
     name: Optional[str] = None
     contract_period: Optional[int] = None
     price: Optional[float] = None
+    description: Optional[str] = None
 
 
 class MembershipResponse(MembershipBase):
     id: int
-    created_at: datetime
+    status: str
 
     class Config:
         from_attributes = True
