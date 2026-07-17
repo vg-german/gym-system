@@ -135,7 +135,7 @@ const MembershipsView = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black tracking-tight uppercase">Membership Plans</h1>
+          <h1 className="text-lg font-black tracking-tight uppercase">Membership Plans</h1>
           <p className="text-sm text-zinc-400 mt-1">Configure commercial offers, core pricing, and plan rules.</p>
         </div>
         <button 

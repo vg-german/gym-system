@@ -56,7 +56,7 @@ const SubscriptionsView = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl md:text-3xl font-black tracking-tight uppercase">Subscriptions Log</h1>
+        <h1 className="text-lg font-black tracking-tight uppercase">Subscriptions Log</h1>
         <p className="text-sm text-zinc-400 mt-1">Audit log of current contractual agreements, processing dates, and status.</p>
       </div>
 

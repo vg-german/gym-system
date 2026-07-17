@@ -69,7 +69,7 @@ const DashboardView = () => {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black tracking-tight uppercase">Dashboard Overview</h1>
+          <h1 className="text-lg font-black tracking-tight uppercase">Dashboard Overview</h1>
           <p className="text-sm text-zinc-400 mt-1">Real-time status of the gym network.</p>
         </div>
         

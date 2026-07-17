@@ -355,7 +355,7 @@ const MembersView = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-black tracking-tight uppercase">Members Directory</h1>
+          <h1 className="text-lg font-black tracking-tight uppercase">Members Directory</h1>
           <p className="text-sm text-zinc-400 mt-1">Manage client profiles, subscriptions, and Face ID enrollment.</p>
         </div>
         <button 
@@ -385,7 +385,7 @@ const MembersView = () => {
       <div className="bg-zinc-900 rounded-2xl border border-white/5 p-6 overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
-            <tr className="border-b border-white/5 text-zinc-500 text-xs font-bold uppercase tracking-wider">
+            <tr className="border-b border-white/5 text-zinc-500 text-[10px] font-bold uppercase tracking-wider">
               <th className="pb-3"> </th>
               <th className="pb-3">First Name</th>
               <th className="pb-3">Last Name</th>
@@ -400,7 +400,7 @@ const MembersView = () => {
               <th className="pb-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/5 text-sm text-zinc-300">
+          <tbody className="divide-y divide-white/5 text-[10px] text-zinc-300">
             {error ? (
               <tr>
                 <td colSpan="12" className="py-8 text-center text-rose-400 font-medium">{error}</td>

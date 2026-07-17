@@ -30,13 +30,12 @@ const AdminDashboard = ({ onLogout }) => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white font-sans flex flex-col">
+    <div className="h-screen w-screen bg-zinc-950 text-white font-sans flex flex-col overflow-hidden">
       
-      {/* Top bar */}
-      <header className="h-16 w-full bg-zinc-900 border-b border-white/5 flex items-center justify-between px-6 z-10 shrink-0">
+      <header className="h-12 w-full bg-zinc-900 border-b border-white/5 flex items-center justify-between px-6 z-10 shrink-0">
         <div className="flex items-center space-x-3">
-          <div className="w-3 h-3 bg-cyan-400 rounded-full animate-pulse" />
-          <span className="font-black tracking-widest text-lg uppercase">Gym-System</span>
+          <div className="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-pulse" />
+          <span className="font-black tracking-widest text-base uppercase">Gym-System</span>
         </div>
         
         <div className="flex items-center space-x-4">
@@ -50,17 +49,15 @@ const AdminDashboard = ({ onLogout }) => {
         </div>
       </header>
 
-      {/* Main Container */}
-      <div className="flex flex-1 min-h-0">
+      <div className="flex flex-1 min-h-0 w-full overflow-hidden">
         
-        {/* Sidebar */}
-        <aside className="w-64 bg-zinc-900 border-r border-white/5 p-4 flex flex-col justify-between hidden md:flex shrink-0">
-          <div className="space-y-2">
-            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest px-3 mb-4">Menu</p>
+        <aside className="w-42 h-full bg-zinc-900 border-r border-white/5 p-3 flex flex-col justify-between hidden md:flex shrink-0 overflow-y-auto">
+          <div className="space-y-1">
+            <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest px-2 mb-2">Menu</p>
             
             <button 
               onClick={() => setActiveTab('dashboard')}
-              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-bold text-sm transition-colors cursor-pointer ${
+              className={`w-full flex items-center space-x-2.5 px-2.5 py-2 rounded-xl font-bold text-xs transition-colors cursor-pointer ${
                 activeTab === 'dashboard' ? 'bg-cyan-950 text-cyan-400' : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
               }`}
             >
@@ -70,7 +67,7 @@ const AdminDashboard = ({ onLogout }) => {
             
             <button 
               onClick={() => setActiveTab('members')}
-              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-bold text-sm transition-colors cursor-pointer ${
+              className={`w-full flex items-center space-x-2.5 px-2.5 py-2 rounded-xl font-bold text-xs transition-colors cursor-pointer ${
                 activeTab === 'members' ? 'bg-cyan-950 text-cyan-400' : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
               }`}
             >
@@ -80,7 +77,7 @@ const AdminDashboard = ({ onLogout }) => {
             
             <button 
               onClick={() => setActiveTab('memberships')}
-              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-bold text-sm transition-colors cursor-pointer ${
+              className={`w-full flex items-center space-x-2.5 px-2.5 py-2 rounded-xl font-bold text-xs transition-colors cursor-pointer ${
                 activeTab === 'memberships' ? 'bg-cyan-950 text-cyan-400' : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
               }`}
             >
@@ -90,7 +87,7 @@ const AdminDashboard = ({ onLogout }) => {
             
             <button 
               onClick={() => setActiveTab('subscriptions')}
-              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl font-bold text-sm transition-colors cursor-pointer ${
+              className={`w-full flex items-center space-x-2.5 px-2.5 py-2 rounded-xl font-bold text-xs transition-colors cursor-pointer ${
                 activeTab === 'subscriptions' ? 'bg-cyan-950 text-cyan-400' : 'text-zinc-400 hover:bg-zinc-800 hover:text-white'
               }`}
             >
@@ -99,13 +96,12 @@ const AdminDashboard = ({ onLogout }) => {
             </button>
           </div>
 
-          <div className="p-3 bg-zinc-950 rounded-xl border border-white/5 text-center">
-            <p className="text-xs text-zinc-500 font-medium">System v1.0.0</p>
+          <div className="p-2 bg-zinc-950 rounded-xl border border-white/5 text-center">
+            <p className="text-[10px] text-zinc-500 font-medium">System v1.0.0</p>
           </div>
         </aside>
 
-        {/* Central Space */}
-        <main className="flex-1 p-6 md:p-8 bg-zinc-950 overflow-y-auto">
+        <main className="flex-1 h-full p-6 md:p-8 bg-zinc-950 overflow-y-auto min-w-0">
           <div className="w-full">
             
             {activeTab === 'dashboard' && <DashboardView />}
