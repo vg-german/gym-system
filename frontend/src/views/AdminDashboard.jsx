@@ -51,7 +51,7 @@ const AdminDashboard = ({ onLogout }) => {
 
       <div className="flex flex-1 min-h-0 w-full overflow-hidden">
         
-        <aside className="w-42 h-full bg-zinc-900 border-r border-white/5 p-3 flex flex-col justify-between hidden md:flex shrink-0 overflow-y-auto">
+        <aside className="w-36 h-full bg-zinc-900 border-r border-white/5 p-3 flex flex-col justify-between hidden md:flex shrink-0 overflow-y-auto">
           <div className="space-y-1">
             <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest px-2 mb-2">Menu</p>
             
