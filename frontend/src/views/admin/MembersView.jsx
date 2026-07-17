@@ -415,7 +415,7 @@ const MembersView = () => {
               members.map((member) => (
                 <tr key={member.id} className="hover:bg-zinc-800/30 transition-colors">
                   <td className="py-4">
-                    <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400">
+                    <div className="font-bold text-zinc-400 mr-2">
                       👤
                     </div>
                   </td>
