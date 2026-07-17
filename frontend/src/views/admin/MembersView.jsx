@@ -415,7 +415,7 @@ const MembersView = () => {
               members.map((member) => (
                 <tr key={member.id} className="hover:bg-zinc-800/30 transition-colors">
                   <td className="py-4">
-                    <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400 border border-white/10">
+                    <div className="w-10 h-10 bg-zinc-800 rounded-full flex items-center justify-center font-bold text-zinc-400">
                       👤
                     </div>
                   </td>
@@ -431,11 +431,11 @@ const MembersView = () => {
                   
                   <td className="py-4">
                     {member.face_id_registered ? (
-                      <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider font-mono">
+                      <span className="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-wider font-mono">
                         Captured
                       </span>
                     ) : (
-                      <span className="inline-block px-2.5 py-0.5 rounded-md text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse uppercase tracking-wider font-mono">
+                      <span className="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse uppercase tracking-wider font-mono">
                         Pending
                       </span>
                     )}
@@ -451,7 +451,7 @@ const MembersView = () => {
                     {/* BOTÓN RENEW ADICIONADO */}
                     <button 
                       onClick={() => handleOpenRenewModal(member)}
-                      className="p-1.5 bg-emerald-950 hover:bg-emerald-900 text-emerald-400 hover:text-emerald-350 rounded-lg text-xs font-bold uppercase transition-colors"
+                      className="p-1.5 bg-emerald-950 hover:bg-emerald-900 text-emerald-400 hover:text-emerald-350 rounded-lg text-[10px] font-bold uppercase transition-colors"
                     >
                       Renew
                     </button>
@@ -463,17 +463,17 @@ const MembersView = () => {
                     </button>
                     <button 
                       onClick={() => handleOpenFaceScan(member)}
-                      className={`p-1.5 rounded-lg text-xs font-bold uppercase transition-colors ${
+                      className={`p-1.5 rounded-lg text-[10px] font-bold uppercase transition-colors ${
                         member.face_id_registered 
                           ? 'bg-zinc-800 hover:bg-cyan-950 hover:text-cyan-400 text-zinc-300' 
                           : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-md'
                       }`}
                     >
-                      📷 Scan Face
+                      Scan Face
                     </button>
                     <button 
                       onClick={() => handleConfirmDrop(member)}
-                      className="p-1.5 bg-zinc-800 hover:bg-rose-950 hover:text-rose-400 rounded-lg text-xs font-bold uppercase transition-colors text-zinc-400"
+                      className="p-1.5 bg-zinc-800 hover:bg-rose-950 hover:text-rose-400 rounded-lg text-[10px] font-bold uppercase transition-colors text-zinc-400"
                     >
                       Drop
                     </button>
