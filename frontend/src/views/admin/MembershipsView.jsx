@@ -6,9 +6,9 @@ const MembershipsView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estados para el Modal de Formulario (Crear / Editar)
+  // STATUS MODAL FORM CREATE UPDATE
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [editingPlan, setEditingPlan] = useState(null); // null = Crear, objeto = Editar
+  const [editingPlan, setEditingPlan] = useState(null); 
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -16,16 +16,16 @@ const MembershipsView = () => {
     contract_period: '1'
   });
 
-  // Estados para el Modal de Confirmación de Pausa / Activación
+  // STATUS MODAL CONFIRMATION PAUSE/ACTIVATE
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [targetPlan, setTargetPlan] = useState(null);
 
-  // Estados para el Modal de Confirmación de Eliminación
+  // STATUS MODAL DELETE CONFIRMATION
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletingPlan, setDeletingPlan] = useState(null);
   const [deleteError, setDeleteError] = useState(null);
 
-  // 1. Cargar Planes
+  // GET MEMBERSHIPS
   const fetchMemberships = async () => {
     setLoading(true);
     try {
@@ -42,14 +42,14 @@ const MembershipsView = () => {
     fetchMemberships();
   }, []);
 
-  // 2. Abrir Modal para Crear
+  // OPEN MODAL CREATE
   const handleOpenCreate = () => {
     setEditingPlan(null);
     setFormData({ name: '', description: '', price: '', contract_period: '1' });
     setIsFormModalOpen(true);
   };
 
-  // 3. Abrir Modal para Editar
+  // OPEN MODAL UPDATE
   const handleOpenEdit = (plan) => {
     setEditingPlan(plan);
     setFormData({
@@ -61,7 +61,7 @@ const MembershipsView = () => {
     setIsFormModalOpen(true);
   };
 
-  // 4. Enviar Formulario (Crear o Editar)
+  // SEND FORM
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -73,27 +73,23 @@ const MembershipsView = () => {
       };
 
       if (editingPlan) {
-        // Petición PUT para actualizar
         await api.put(`/memberships/${editingPlan.id}`, payload);
       } else {
-        // Petición POST para crear (asumimos que inicia activa)
         await api.post('/memberships', { ...payload, status: 'active' });
       }
 
       setIsFormModalOpen(false);
-      fetchMemberships(); // Recargar datos
+      fetchMemberships(); 
     } catch (err) {
       alert("Error saving membership plan. Check backend validation.");
     }
   };
 
-  // 5. Abrir Confirmación de Estado
   const handleOpenStatusModal = (plan) => {
     setTargetPlan(plan);
     setIsStatusModalOpen(true);
   };
 
-  // 6. Confirmar Cambio de Estado (Pause / Activate)
   const handleConfirmStatusToggle = async () => {
     if (!targetPlan) return;
     try {
@@ -107,7 +103,6 @@ const MembershipsView = () => {
     }
   };
 
-  // Abrir Confirmación de Eliminación
   const handleOpenDeleteModal = (plan) => {
     setDeletingPlan(plan);
     setIsDeleteModalOpen(true);
@@ -119,19 +114,17 @@ const MembershipsView = () => {
     setDeleteError(null);
   };
 
-  // Confirmar y Ejecutar la Eliminación en el Backend
   const handleConfirmDelete = async () => {
     if (!deletingPlan) return;
     setDeleteError(null);
     try {
-      // Tu endpoint retorna 204 No Content
       await api.delete(`/memberships/${deletingPlan.id}`);
       
       setIsDeleteModalOpen(false);
       setDeletingPlan(null);
-      fetchMemberships(); // Recargar la matriz de precios actualizada
+      fetchMemberships(); 
     } catch (err) {
-      // Captura el HTTP 400 en caso de restricciones de llave foránea (suscripciones activas)
+      
       const errorMsg = err.response?.data?.detail || "Cannot delete membership plan. It may be linked to active subscriptions.";
       setDeleteError(errorMsg);
     }
@@ -153,7 +146,7 @@ const MembershipsView = () => {
         </button>
       </div>
 
-      {/* Grid de Planes Dinámicos */}
+      
       {loading ? (
         <div className="text-center py-12 text-zinc-500 font-bold text-xs uppercase tracking-widest animate-pulse">
           Loading pricing matrix...
@@ -199,7 +192,7 @@ const MembershipsView = () => {
                       {isPaused ? 'Activate' : 'Pause'}
                     </button>
                     
-                    {/* Renderizado condicional: Solo visible si está en pausa */}
+                    
                       {isPaused && (
                         <button 
                           onClick={() => handleOpenDeleteModal(plan)}
@@ -217,7 +210,7 @@ const MembershipsView = () => {
         </div>
       )}
 
-      {/* MODAL 1: FORMULARIO (CREAR / EDITAR) */}
+      {/* MODAL 1: CREATE / UPDATE */}
       {isFormModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
           <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl">
@@ -241,7 +234,7 @@ const MembershipsView = () => {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  placeholder="e.g., VIP Platinum Pass"
+                  placeholder="e.g., VIP Plan"
                   className="w-full bg-zinc-950 text-white text-sm rounded-xl border border-white/10 px-4 py-2.5 focus:outline-none focus:border-cyan-500"
                 />
               </div>
@@ -252,7 +245,7 @@ const MembershipsView = () => {
                   rows="3"
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  placeholder="Describe perks, guest passes, locker limits..."
+                  placeholder="Describe your membership"
                   className="w-full bg-zinc-950 text-white text-sm rounded-xl border border-white/10 px-4 py-2.5 focus:outline-none focus:border-cyan-500 resize-none"
                 />
               </div>
@@ -305,7 +298,7 @@ const MembershipsView = () => {
         </div>
       )}
 
-      {/* MODAL 2: CONFIRMACIÓN PARA PAUSAR / ACTIVAR */}
+      {/* MODAL 2: PAUSE / ACTIVATE */}
       {isStatusModalOpen && targetPlan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
           <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-sm p-6 space-y-4 shadow-2xl text-center">
@@ -339,14 +332,13 @@ const MembershipsView = () => {
         </div>
       )}
 
-      {/* MODAL 3: CONFIRMACIÓN / BLOQUEO DE ELIMINACIÓN */}
+      {/* MODAL 3: DELETE*/}
       {isDeleteModalOpen && deletingPlan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
           <div className={`bg-zinc-900 border rounded-2xl w-full max-w-sm p-6 space-y-4 shadow-2xl transition-all duration-300 ${
             deleteError ? 'border-amber-500/20 shadow-amber-950/5' : 'border-rose-500/20 shadow-rose-950/5'
           }`}>
             
-            {/* VISTA A: SI EL BACKEND BLOQUEÓ EL BORRADO */}
             {deleteError ? (
               <div className="text-center space-y-4">
                 <div className="mx-auto w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/20 text-amber-500 text-xl font-bold animate-bounce">
@@ -378,7 +370,7 @@ const MembershipsView = () => {
                 </div>
               </div>
             ) : (
-              /* VISTA B: CONFIRMACIÓN ESTÁNDAR (El diseño que ya tenías) */
+              
               <div className="text-center space-y-4">
                 <div className="mx-auto w-12 h-12 rounded-full bg-rose-500/10 flex items-center justify-center border border-rose-500/20 text-rose-500 text-xl font-bold">
                   !

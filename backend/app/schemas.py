@@ -54,8 +54,14 @@ class MemberBase(BaseModel):
     total_weight_lifted_kg: Optional[float] = 0.0
 
 
-class MemberCreate(MemberBase):
-    pass
+class MemberCreate(BaseModel):
+    first_name: str
+    last_name: Optional[str] = None
+    email: str
+    phone_number: Optional[str] = None
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    address: Optional[str] = None
 
 
 class MemberFaceRegister(BaseModel):
@@ -63,16 +69,28 @@ class MemberFaceRegister(BaseModel):
 
 
 class MemberUpdate(BaseModel):
-    first_name: Optional[str] = None
+    first_name: str
     last_name: Optional[str] = None
-    email: Optional[str] = None
+    email: str
     phone_number: Optional[str] = None
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    address: Optional[str] = None
     status: Optional[str] = None
 
 
 class MemberResponse(MemberBase):
     id: UUID
     status: str
+
+    class Config:
+        from_attributes = True
+
+
+class TableMemberResponse(MemberBase):
+    id: UUID
+    status: str
+    face_id_registered: bool
     face_embedding: Optional[List[float]] = None
     join_date: datetime
     last_visit_date: Optional[datetime] = None
@@ -81,7 +99,18 @@ class MemberResponse(MemberBase):
         from_attributes = True
 
 
+class PaginatedMembersResponse(BaseModel):
+    items: List[TableMemberResponse]
+    total_pages: int
+    current_page: int
+    total_items: int
+
+    class Config:
+        from_attributes = True
+
 # Access Verification Schema
+
+
 class FaceVerificationRequest(BaseModel):
     face_embedding: List[float]
 

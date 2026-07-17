@@ -7,10 +7,8 @@ const AccessControl = () => {
   const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('Look to the camera to enter');
   
- 
   const statusRef = useRef('loading');
   const isProcessing = useRef(false);
-
 
   useEffect(() => {
     statusRef.current = status;
@@ -51,10 +49,8 @@ const AccessControl = () => {
 
 
   useEffect(() => {
-    
     if (status === 'loading' || status === 'error') return;
 
-    
     const interval = setInterval(async () => {
       if (
         isProcessing.current || 
@@ -67,13 +63,19 @@ const AccessControl = () => {
       }
 
       try {
+        // === CAMBIO CLAVE 1: Bloqueamos inmediatamente ===
+        // Marcamos como ocupado antes de que face-api empiece a procesar el frame.
+        // Esto evita que el siguiente ciclo del setInterval (a los 250ms) intente escanear en paralelo.
+        isProcessing.current = true;
+
         const detection = await faceapi
           .detectSingleFace(videoRef.current)
           .withFaceLandmarks()
           .withFaceDescriptor();
 
         if (detection) {
-          isProcessing.current = true;
+          // Si detectamos un rostro, el flujo continúa bloqueado ('isProcessing' sigue en true).
+          // Pasamos el estado de la UI a cargando mientras consultamos al backend.
           setStatus('loading'); 
           setMessage('Verifying identity...');
           
@@ -99,14 +101,24 @@ const AccessControl = () => {
             setMessage('Error connecting to server');
           }
 
+          // Esperamos 7 segundos mostrando el resultado del acceso antes de reestablecer
           setTimeout(() => {
             setStatus('ready');
             setMessage('Look to the camera to enter');
+            // Desbloqueamos el scanner para la siguiente persona
             isProcessing.current = false;
-          }, 5000);
+          }, 7000);
+
+        } else {
+          // === CAMBIO CLAVE 2: Liberar si no hay rostro ===
+          // Si la IA terminó de analizar este frame y no detectó a nadie,
+          // desbloqueamos inmediatamente para permitir que el siguiente tick analice el próximo frame.
+          isProcessing.current = false;
         }
+
       } catch (error) {
         console.error("Error scanning:", error);
+        // Si hay algún error inesperado en la IA, nos aseguramos de desbloquear el proceso
         isProcessing.current = false;
         setStatus('ready');
       }

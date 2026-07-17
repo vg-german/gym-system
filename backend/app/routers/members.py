@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List
+from fastapi import APIRouter, Depends, HTTPException, status, Depends, Query
+from typing import List, Optional
 from app.client import supabase, verify_admin
-from app.schemas import MemberCreate, MemberResponse, MemberFaceRegister, MemberUpdate, FaceVerificationRequest
-import math
+from app.schemas import MemberCreate, MemberResponse, MemberFaceRegister, MemberUpdate, FaceVerificationRequest, PaginatedMembersResponse, TableMemberResponse
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from uuid import UUID
+import math
+from math import ceil
 
 
 router = APIRouter(prefix="/members", tags=["Members"])
@@ -22,7 +23,7 @@ def calculate_euclidean_distance(vector1: List[float], vector2: List[float]) -> 
 # 1. CREATE member
 
 
-@router.post("/", response_model=MemberResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=MemberResponse, status_code=status.HTTP_201_CREATED)
 def create_member(member: MemberCreate, admin=Depends(verify_admin)):
     try:
         response = supabase.table("members").insert(
@@ -175,3 +176,82 @@ def verify_access(request: FaceVerificationRequest):
     except Exception as e:
         raise HTTPException(
             status_code=500, detail=f"Access control error: {str(e)}")
+
+
+@router.get("", response_model=PaginatedMembersResponse, status_code=status.HTTP_200_OK)
+def get_members(
+    page: int = Query(1, ge=1),
+    limit: int = Query(5, ge=1, le=50),
+    search: Optional[str] = Query(None),
+    status_filter: Optional[str] = Query(None, alias="status"),
+    admin=Depends(verify_admin)
+):
+    try:
+        start_index = (page - 1) * limit
+        end_index = start_index + limit - 1
+
+        query = supabase.table("members").select("*", count="exact")
+
+        if status_filter:
+            query = query.eq("status", status_filter)
+
+        if search:
+            search_query = f"%{search.strip()}%"
+            query = query.or_(
+                f"first_name.ilike.{search_query},"
+                f"last_name.ilike.{search_query},"
+                f"email.ilike.{search_query}"
+            )
+
+        members_response = (
+            query.order("join_date", desc=True)
+            .range(start_index, end_index)
+            .execute()
+        )
+
+        raw_members = members_response.data
+        total_items = members_response.count or 0
+
+        processed_items = []
+        for member in raw_members:
+            face_embedding = member.get("face_embedding")
+            face_id_registered = False
+
+            if face_embedding is not None:
+                if isinstance(face_embedding, list) and len(face_embedding) > 0:
+                    face_id_registered = True
+
+            processed_item = {
+                "id": member["id"],
+                "first_name": member["first_name"],
+                "last_name": member.get("last_name"),
+                "email": member["email"],
+                "phone_number": member.get("phone_number"),
+                "address": member.get("address"),
+                "age": member.get("age"),
+                "gender": member.get("gender"),
+                "status": member.get("status"),
+                "join_date": member["join_date"],
+                "last_visit_date": member.get("last_visit_date"),
+
+                "face_id_registered": face_id_registered
+            }
+
+            processed_items.append(TableMemberResponse(**processed_item))
+
+        total_pages = (total_items + limit -
+                       1) // limit if total_items > 0 else 1
+
+        return PaginatedMembersResponse(
+            items=processed_items,
+            total_pages=total_pages,
+            current_page=page,
+            total_items=total_items
+        )
+
+    except Exception as e:
+        print(f"Error en endpoint de miembros: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
